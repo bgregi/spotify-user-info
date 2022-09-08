@@ -1,31 +1,31 @@
 import useAuth from './useAuth';
 import SpotifyWebApi from 'spotify-web-api-node';
 import { useEffect, useState } from 'react';
-
-interface ICounts {
-	[key: string]: number;
-}
+import TopArtists from './TopArtists';
+import TopTracks from './TopTracks';
+import { useRecoilState } from 'recoil';
+import { accessToken } from '../state/atom';
+import TopGenres from './TopGenres';
+import Preferences from './Preferences';
+import Footer from './Footer';
+// import spotifyLogo from 'assets/spotifyLogo.png'
 
 export default function Dashboard() {
-	const accessToken = useAuth();
-	const [userInfo, setUserInfo] = useState<
-		SpotifyApi.CurrentUsersProfileResponse | undefined
-	>(undefined);
-	const [userTopArtists, setUserTopArtists] = useState<
-		SpotifyApi.ArtistObjectFull[] | undefined
-	>(undefined);
-	const [userTopTracks, setUserTopTracks] = useState<
-		SpotifyApi.TrackObjectFull[] | undefined
-	>(undefined);
-	const [userTopGenres, setUserTopGenres] = useState<string[]>();
+	const getAccessToken = useAuth();
+	const [token, setToken] = useRecoilState(accessToken);
 
 	const spotifyApi = new SpotifyWebApi({
 		clientId: 'f01f87154b634e5cbd387f70e116d207',
 	});
 
+	const [userInfo, setUserInfo] = useState<
+		SpotifyApi.CurrentUsersProfileResponse | undefined
+	>(undefined);
+
 	useEffect(() => {
-		if (!accessToken) return;
-		spotifyApi.setAccessToken(accessToken);
+		if (!getAccessToken) return;
+		setToken(getAccessToken);
+		spotifyApi.setAccessToken(getAccessToken);
 
 		spotifyApi //GETS THE USER'S INFO
 			.getMe()
@@ -35,112 +35,50 @@ export default function Dashboard() {
 			.catch((err) => {
 				console.log(err);
 			});
-
-		spotifyApi //GETS THE USER'S TOP ARTISTS
-			.getMyTopArtists({
-				limit: 50,
-			})
-			.then((res) => {
-				setUserTopArtists(res.body.items);
-				// console.log(res.body.items);
-			})
-			.catch((err) => console.log(err));
-
-		spotifyApi //GETS THE USER'S TOP TRACKS
-			.getMyTopTracks({
-				limit: 50,
-			})
-			.then((res) => {
-				setUserTopTracks(res.body.items);
-				// console.log(res.body.items);
-			})
-			.catch((err) => console.log(err));
-
-		spotifyApi
-			.getArtist('4OrizGCKhOrW6iDDJHN9xd')
-			.then((res) => {
-				// console.log(res.body);
-			})
-			.catch((err) => console.log(err));
-
-	}, [accessToken]);
-
-    useEffect(() => {
-		if (userTopTracks && accessToken) {
-            spotifyApi.setAccessToken(accessToken);
-
-			spotifyApi
-				.getAudioFeaturesForTrack(userTopTracks[0].id)
-				.then((res) => {
-					console.log(res.body);
-				})
-				.catch((err) => console.log(err));
-		}
-    }, [userTopTracks])
-
-	useEffect(() => {
-		const genres = userTopArtists
-			?.map((artist) => {
-				return artist.genres;
-			})
-			.reduce((acc, val) => acc.concat(val), []);
-		const counts: ICounts = {};
-		genres?.forEach((x) => {
-			counts[x] = (counts[x] || 0) + 1;
-		}); //CREATES OBJECT WITH NUMBER OF RECURRENCES OF EACH GENRE
-
-		const sortedCounts = Object.entries(counts).sort((x, y) => y[1] - x[1]);
-		const allGenresSorted = sortedCounts.map((genre) => genre[0]);
-		allGenresSorted.splice(10);
-
-		setUserTopGenres(allGenresSorted);
-	}, [userTopTracks]);
+	}, [getAccessToken]);
 
 	return (
-		<div>
-			<div>
-				<img
+		<>
+			<div className='d-flex flex-column justify-content-center align-items-center text-white'>
+				<div
+					className='d-flex flex-column justify-content-center align-items-center w-100'
 					style={{
-						height: '100px',
-						width: 'auto',
-						borderRadius: '100%',
-					}}
-					src={userInfo?.images?.[0].url}
-					alt='user'
-				/>
-				Hi, {userInfo?.display_name}!
-			</div>
-			<div className='d-flex'>
-				<div>
-					<h1>Your Top Artists</h1>
-					<ul>
-						{userTopArtists?.map((artist, index) => (
-							<li key={index}>{artist.name}</li>
-						))}
-					</ul>
+						backgroundImage:
+							'linear-gradient(0deg, rgba(25,20,20,1) 5%, rgba(25,20,20,1) 26%, rgba(26,65,38,1) 63%, rgba(28,122,60,1) 82%, rgba(30,215,96,1) 100%)',
+					}}>
+					<div className='d-flex align-items-start mt-3'>
+						<h5 style={{margin: '3px 6px 0 0'}}>Powered by</h5>
+						<img
+							src={require('../assets/spotifyLogo.png')}
+							alt='Spotify'
+							style={{ width: '100px' }}
+						/>
+					</div>
+					<img
+						className='mt-5'
+						style={{
+							height: '150px',
+							width: '150px',
+							borderRadius: '50%',
+							objectFit: 'cover',
+						}}
+						src={userInfo?.images?.[0].url}
+						alt='user'
+					/>
+					<h1 className='text-center mt-5'>
+						Hi, {userInfo?.display_name?.split(' ')[0]}!
+					</h1>
+					<p className='h2 mt-3'>
+						We've gathered below some information about your
+						listening habits...
+					</p>
 				</div>
-				<div>
-					<h1>Your Top Tracks</h1>
-					<ul>
-						{userTopTracks?.map((track, index) => (
-							<li key={index}>
-								{track.name} - {track.artists[0].name}
-							</li>
-						))}
-					</ul>
-				</div>
+				<TopArtists />
+				<TopTracks />
+				<TopGenres />
+				<Preferences />
+                <Footer />
 			</div>
-			<div>
-				<h1>
-					Based on your top artists, these are your 10 favourite
-					genres
-				</h1>
-				<ul>
-					{userTopGenres?.map((genre) => (
-						<li key={genre}>{genre}</li>
-					))}
-				</ul>
-			</div>
-		</div>
+		</>
 	);
 }

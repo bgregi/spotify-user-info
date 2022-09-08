@@ -21,11 +21,11 @@ export default function Login() {
 
 	return (
 		<Container
-			className='d-flex flex-column justify-content-center align-items-center bg-dark m-0'
-			style={{ minHeight: '100vh', minWidth: '100vw' }}>
+			className='d-flex flex-column justify-content-center align-items-center m-0'
+			style={{ minHeight: '100vh', minWidth: '100vw', backgroundColor: 'rgb(25,20,20)' }}>
 			<h1 className='mb-2 text-white'>Welcome to the Spotify User Info</h1>
 			<h3 className='mb-4 text-white'>To start, please login</h3>
-			<a className='btn btn-success btn-lg' href={AUTH_URL}>
+			<a style={{backgroundColor: 'rgb(30,215,96)'}} className='btn btn-lg' href={AUTH_URL}>
 				Login with Spotify
 			</a>
 		</Container>
