@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { accessToken, topTracks } from "../state/atom";
+import { useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { accessToken, topTracks } from '../state/atom';
 import SpotifyWebApi from 'spotify-web-api-node';
 
 interface ITracksFeatures {
@@ -34,21 +34,26 @@ const initialMeanTracksFeatures = {
 };
 
 export default function Preferences() {
-    const token = useRecoilValue(accessToken)
-    const spotifyApi = new SpotifyWebApi({
+	const token = useRecoilValue(accessToken);
+	const spotifyApi = new SpotifyWebApi({
 		clientId: 'f01f87154b634e5cbd387f70e116d207',
 	});
-    
-    const [userTopTracks, setUserTopTracks] = useRecoilState(topTracks);
-    const [tracksAudioFeatures, setTracksAudioFeatures] = useState<SpotifyApi.AudioFeaturesObject[]>();
-    const [numericTracksFeatures, setNumericTracksFeatures] = useState<ITracksFeatures[]>([]);
-    const [meanTracksFeatures, setMeanTracksFeatures] = useState<ITracksFeatures>(initialMeanTracksFeatures);
+
+	const [userTopTracks, setUserTopTracks] = useRecoilState(topTracks);
+	const [tracksAudioFeatures, setTracksAudioFeatures] =
+		useState<SpotifyApi.AudioFeaturesObject[]>();
+	const [numericTracksFeatures, setNumericTracksFeatures] = useState<
+		ITracksFeatures[]
+	>([]);
+	const [meanTracksFeatures, setMeanTracksFeatures] =
+		useState<ITracksFeatures>(initialMeanTracksFeatures);
 
 	function getAverageValue(feature: keyof ITracksFeatures) {
 		return (
 			numericTracksFeatures
 				?.map((track) => track[feature])
-				.reduce((a, b) => a + b) / 50
+				.reduce((a, b) => a + b) / 50 * 100
+                
 		);
 	}
 
@@ -58,7 +63,19 @@ export default function Preferences() {
 			.reduce((a, b) => (a > b ? a : b));
 	}
 
-    useEffect(() => {
+    function getAverageVerdict(value: number, category: string) {
+        if (value <= 25) {
+            return `That means you probably don\'t like ${category} songs`
+        } else if (value > 25 && value <= 50) {
+            return `That means you probably like a few ${category} songs, but prefer other kinds of songs`
+        } else if (value > 50 && value <= 75) {
+            return `That probably means ${category} songs are one of your favourite kinds of songs`
+        } else {
+            return `That probably means ${category} songs are your favourite kind of songs`
+        }
+    }
+
+	useEffect(() => {
 		if (userTopTracks && token) {
 			spotifyApi.setAccessToken(token);
 
@@ -87,10 +104,11 @@ export default function Preferences() {
 							};
 						})
 					);
+                    console.log('foi')
 				})
 				.catch((err) => console.log(err));
 		}
-	}, [userTopTracks]);
+	}, [numericTracksFeatures]);
 
 	useEffect(() => {
 		if (tracksAudioFeatures) {
@@ -110,52 +128,58 @@ export default function Preferences() {
 			});
 		}
 	}, [tracksAudioFeatures]);
-    
+
 	return (
-		<div style={{backgroundColor: 'rgb(25,20,20)'}} className='w-100'>
-					<h1 className="mt-5 text-center">
-						Based on yout top tracks, these are your musical
-						preferences
-					</h1>
-					<ul className='list-group list-group-flush d-flex flex-column justify-content-center align-items-center'>
-						<li className='list-group-item'>
-							acousticness: {meanTracksFeatures.acousticness}
-						</li>
-						<li className='list-group-item'>
-							danceability:{meanTracksFeatures.danceability}
-						</li>
-						<li className='list-group-item'>
-							duration_ms:{meanTracksFeatures.duration_ms}
-						</li>
-						<li className='list-group-item'>
-							energy:{meanTracksFeatures.energy}
-						</li>
-						<li className='list-group-item'>
-							instrumentalness:
-							{meanTracksFeatures.instrumentalness}
-						</li>
-						<li className='list-group-item'>
-							key:{meanTracksFeatures.key}
-						</li>
-						<li className='list-group-item'>
-							liveness:{meanTracksFeatures.liveness}
-						</li>
-						<li className='list-group-item'>
-							loudness:{meanTracksFeatures.loudness}
-						</li>
-						<li className='list-group-item'>
-							mode:{meanTracksFeatures.mode}
-						</li>
-						<li className='list-group-item'>
-							tempo:{meanTracksFeatures.tempo}
-						</li>
-						<li className='list-group-item'>
-							time_signature:{meanTracksFeatures.time_signature}
-						</li>
-						<li className='list-group-item'>
-							valence:{meanTracksFeatures.valence}
-						</li>
-					</ul>
+		<div style={{ backgroundColor: 'rgb(25,20,20)' }} className='w-100 d-flex flex-column align-items-center'>
+			<h1 className='mt-5 text-center'>
+				Based on yout top tracks, these are your musical preferences
+			</h1>
+            <h4 className='mt-4'>Your <span className='text-success'>acousticness</span> index is {meanTracksFeatures.acousticness.toFixed(0)}%</h4>
+            <h4>{getAverageVerdict(meanTracksFeatures.acousticness, 'acoustic')}</h4>
+
+            <h4 className='mt-4'>Your <span className='text-success'>danceability</span> index is {meanTracksFeatures.danceability.toFixed(0)}%</h4>
+            <h4>{getAverageVerdict(meanTracksFeatures.danceability, 'danceable')}</h4>
+
+            <h4 className='mt-4'>Your <span className='text-success'>energy</span> index is {meanTracksFeatures.energy.toFixed(0)}%</h4>
+            <h3>{getAverageVerdict(meanTracksFeatures.energy, 'energetic')}</h3>
+
+
+
+
+			<ul className='list-group list-group-flush d-flex flex-column justify-content-center align-items-center'>
+
+				<li className='list-group-item'>
+					duration_ms:{meanTracksFeatures.duration_ms}
+				</li>
+				<li className='list-group-item'>
+					energy:{meanTracksFeatures.energy}
+				</li>
+				<li className='list-group-item'>
+					instrumentalness:
+					{meanTracksFeatures.instrumentalness}
+				</li>
+				<li className='list-group-item'>
+					key:{meanTracksFeatures.key}
+				</li>
+				<li className='list-group-item'>
+					liveness:{meanTracksFeatures.liveness}
+				</li>
+				<li className='list-group-item'>
+					loudness:{meanTracksFeatures.loudness}
+				</li>
+				<li className='list-group-item'>
+					mode:{meanTracksFeatures.mode}
+				</li>
+				<li className='list-group-item'>
+					tempo:{meanTracksFeatures.tempo}
+				</li>
+				<li className='list-group-item'>
+					time_signature:{meanTracksFeatures.time_signature}
+				</li>
+				<li className='list-group-item'>
+					valence:{meanTracksFeatures.valence}
+				</li>
+			</ul>
 		</div>
 	);
 }

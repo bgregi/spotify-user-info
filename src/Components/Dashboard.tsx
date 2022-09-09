@@ -8,9 +8,7 @@ import { accessToken } from '../state/atom';
 import TopGenres from './TopGenres';
 import Preferences from './Preferences';
 import Footer from './Footer';
-
-
-// import styled from 'styled-components';
+import styled from 'styled-components';
 
 export default function Dashboard() {
 	const getAccessToken = useAuth();
@@ -39,13 +37,8 @@ export default function Dashboard() {
 			});
 	}, [getAccessToken]);
 
-    // const Loader = styled.div`
-
 	return (
 		<>
-			<div className='loader-container'>
-				<div className='spinner'></div>
-			</div>
 			<div className='main-content d-flex flex-column justify-content-center align-items-center text-white'>
 				<div
 					className='d-flex flex-column justify-content-center align-items-center w-100'
@@ -67,7 +60,7 @@ export default function Dashboard() {
 					<h1 className='text-center mt-5'>
 						Hi, {userInfo?.display_name?.split(' ')[0]}!
 					</h1>
-					<p className='h2 mt-3'>
+					<p className='h2 mt-3 text-center'>
 						We've gathered below some information about your
 						listening habits...
 					</p>

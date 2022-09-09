@@ -31,7 +31,7 @@ export default function TopArtists() {
             <h5 className='text-center mb-4'>{'(You can click on the artist to go to their Spotify page)'}</h5>
 			<ul className='list-group list-group-flush d-flex flex-column justify-content-center align-items-center'>
 				{userTopArtists?.map((artist, index) => (
-					<li style={{backgroundColor: 'rgb(25,20,20)'}} className='list-group-item text-white border-0' key={index}>
+					<li style={{backgroundColor: 'rgb(25,20,20)'}} className='list-group-item text-white border-0 text-center' key={index}>
 						<a className='text-decoration-none text-reset' href={artist.external_urls.spotify} target='_blank' rel="noreferrer">
                             {index + 1} - {artist.name}
                         </a>

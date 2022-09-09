@@ -19,3 +19,4 @@ export const topTracks = atom<SpotifyApi.TrackObjectFull[]>({
 	key: 'topTracks',
 	default: [],
 });
+
