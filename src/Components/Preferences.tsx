@@ -115,7 +115,7 @@ export default function Preferences() {
 		<div style={{backgroundColor: 'rgb(25,20,20)'}} className='w-100'>
 					<h1 className="mt-5 text-center">
 						Based on yout top tracks, these are your musical
-						preferences:
+						preferences
 					</h1>
 					<ul className='list-group list-group-flush d-flex flex-column justify-content-center align-items-center'>
 						<li className='list-group-item'>

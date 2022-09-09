@@ -27,11 +27,14 @@ export default function TopArtists() {
     
 	return (
 		<div style={{backgroundColor: 'rgb(25,20,20)'}} className='w-100'>
-            <h1 className='text-center mt-5'>Your Top Artists</h1>
+            <h1 className='text-center mt-5'>These are your current top artists</h1>
+            <h5 className='text-center mb-4'>{'(You can click on the artist to go to their Spotify page)'}</h5>
 			<ul className='list-group list-group-flush d-flex flex-column justify-content-center align-items-center'>
 				{userTopArtists?.map((artist, index) => (
 					<li style={{backgroundColor: 'rgb(25,20,20)'}} className='list-group-item text-white border-0' key={index}>
-						{index + 1} - {artist.name}
+						<a className='text-decoration-none text-reset' href={artist.external_urls.spotify} target='_blank' rel="noreferrer">
+                            {index + 1} - {artist.name}
+                        </a>
 					</li>
 				))}
 			</ul>

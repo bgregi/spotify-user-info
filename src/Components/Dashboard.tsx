@@ -8,7 +8,7 @@ import { accessToken } from '../state/atom';
 import TopGenres from './TopGenres';
 import Preferences from './Preferences';
 import Footer from './Footer';
-// import spotifyLogo from 'assets/spotifyLogo.png'
+// import styled from 'styled-components';
 
 export default function Dashboard() {
 	const getAccessToken = useAuth();
@@ -37,23 +37,20 @@ export default function Dashboard() {
 			});
 	}, [getAccessToken]);
 
+    // const Loader = styled.div`
+
 	return (
 		<>
-			<div className='d-flex flex-column justify-content-center align-items-center text-white'>
+			<div className='loader-container'>
+				<div className='spinner'></div>
+			</div>
+			<div className='main-content d-flex flex-column justify-content-center align-items-center text-white'>
 				<div
 					className='d-flex flex-column justify-content-center align-items-center w-100'
 					style={{
 						backgroundImage:
 							'linear-gradient(0deg, rgba(25,20,20,1) 5%, rgba(25,20,20,1) 26%, rgba(26,65,38,1) 63%, rgba(28,122,60,1) 82%, rgba(30,215,96,1) 100%)',
 					}}>
-					<div className='d-flex align-items-start mt-3'>
-						<h5 style={{margin: '3px 6px 0 0'}}>Powered by</h5>
-						<img
-							src={require('../assets/spotifyLogo.png')}
-							alt='Spotify'
-							style={{ width: '100px' }}
-						/>
-					</div>
 					<img
 						className='mt-5'
 						style={{
@@ -77,7 +74,7 @@ export default function Dashboard() {
 				<TopTracks />
 				<TopGenres />
 				<Preferences />
-                <Footer />
+				<Footer />
 			</div>
 		</>
 	);

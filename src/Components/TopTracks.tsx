@@ -19,7 +19,7 @@ export default function TopTracks() {
         })
         .then((res) => {
             setUserTopTracks(res.body.items);
-            // console.log(res.body.items);
+            console.log(res.body.items);
         })
         .catch((err) => console.log(err));
     }, [token])
@@ -27,11 +27,14 @@ export default function TopTracks() {
 
 	return (
 		<div style={{backgroundColor: 'rgb(25,20,20)'}} className='w-100'>
-            <h1 className='text-center mt-5'>Your Top Tracks</h1>
+            <h1 className='text-center mt-5'>These are your current top tracks</h1>
+            <h5 className='text-center mb-4'>{'(You can click on the track to listen on Spotify)'}</h5>
 			<ul className='list-group list-group-flush d-flex flex-column justify-content-center align-items-center'>
 				{userTopTracks?.map((track, index) => (
 					<li style={{backgroundColor: 'rgb(25,20,20)'}} className='list-group-item text-white border-0' key={index}>
-						{index + 1} - {track.name} - {track.artists[0].name}
+                        <a className='text-decoration-none text-reset' href={track.external_urls.spotify} target='_blank' rel="noreferrer">
+						    {index + 1} - {track.name} - {track.artists[0].name}
+                        </a>
 					</li>
 				))}
 			</ul>
