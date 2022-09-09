@@ -8,6 +8,8 @@ import { accessToken } from '../state/atom';
 import TopGenres from './TopGenres';
 import Preferences from './Preferences';
 import Footer from './Footer';
+
+
 // import styled from 'styled-components';
 
 export default function Dashboard() {
