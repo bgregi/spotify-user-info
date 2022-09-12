@@ -1,5 +1,6 @@
 {
   "name": "spotify-user-info",
+  "homepage": "https://bgregi.github.io/spotify-whats-my-taste/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -22,6 +23,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -48,7 +51,8 @@
   "devDependencies": {
     "@types/react": "^17.0.2",
     "@types/spotify-web-api-node": "^5.0.7",
-    "@types/styled-components": "^5.1.26"
+    "@types/styled-components": "^5.1.26",
+    "gh-pages": "^4.0.0"
   },
   "resolutions": {
     "@types/react": "17.0.2",
