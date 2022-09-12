@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/spotify-whats-my-taste/static/css/main.769deac5.css",
-    "main.js": "/spotify-whats-my-taste/static/js/main.f6110c3f.js",
+    "main.js": "/spotify-whats-my-taste/static/js/main.fe2c411b.js",
     "static/media/spotifyLogo.png": "/spotify-whats-my-taste/static/media/spotifyLogo.f48fb565509bf23854a8.png",
     "index.html": "/spotify-whats-my-taste/index.html",
     "main.769deac5.css.map": "/spotify-whats-my-taste/static/css/main.769deac5.css.map",
-    "main.f6110c3f.js.map": "/spotify-whats-my-taste/static/js/main.f6110c3f.js.map"
+    "main.fe2c411b.js.map": "/spotify-whats-my-taste/static/js/main.fe2c411b.js.map"
   },
   "entrypoints": [
     "static/css/main.769deac5.css",
-    "static/js/main.f6110c3f.js"
+    "static/js/main.fe2c411b.js"
   ]
 }
