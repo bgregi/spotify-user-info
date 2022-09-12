@@ -20,7 +20,6 @@ export default function TopArtists() {
         })
         .then((res) => {
             setUserTopArtists(res.body.items);
-            // console.log(res.body.items);
         })
         .catch((err) => console.log(err));
     }, [token])

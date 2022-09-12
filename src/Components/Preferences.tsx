@@ -8,7 +8,6 @@ interface ITracksFeatures {
 	danceability: number;
 	duration_ms: number;
 	energy: number;
-	instrumentalness: number;
 	key: number;
 	liveness: number;
 	loudness: number;
@@ -23,7 +22,6 @@ const initialMeanTracksFeatures = {
 	danceability: 0,
 	duration_ms: 0,
 	energy: 0,
-	instrumentalness: 0,
 	key: 0,
 	liveness: 0,
 	loudness: 0,
@@ -48,32 +46,7 @@ export default function Preferences() {
 	const [meanTracksFeatures, setMeanTracksFeatures] =
 		useState<ITracksFeatures>(initialMeanTracksFeatures);
 
-	function getAverageValue(feature: keyof ITracksFeatures) {
-		return (
-			numericTracksFeatures
-				?.map((track) => track[feature])
-				.reduce((a, b) => a + b) / 50 * 100
-                
-		);
-	}
-
-	function getMostCommonValue(feature: keyof ITracksFeatures) {
-		return numericTracksFeatures
-			?.map((track) => track[feature])
-			.reduce((a, b) => (a > b ? a : b));
-	}
-
-    function getAverageVerdict(value: number, category: string) {
-        if (value <= 25) {
-            return `That means you probably don\'t like ${category} songs`
-        } else if (value > 25 && value <= 50) {
-            return `That means you probably like a few ${category} songs, but prefer other kinds of songs`
-        } else if (value > 50 && value <= 75) {
-            return `That probably means ${category} songs are one of your favourite kinds of songs`
-        } else {
-            return `That probably means ${category} songs are your favourite kind of songs`
-        }
-    }
+	const [finalPreferences, setFinalPreferences] = useState([]);
 
 	useEffect(() => {
 		if (userTopTracks && token) {
@@ -93,7 +66,6 @@ export default function Preferences() {
 								danceability: track.danceability,
 								duration_ms: track.duration_ms,
 								energy: track.energy,
-								instrumentalness: track.instrumentalness,
 								key: track.key,
 								liveness: track.liveness,
 								loudness: track.loudness,
@@ -104,82 +76,191 @@ export default function Preferences() {
 							};
 						})
 					);
-                    console.log('foi')
 				})
 				.catch((err) => console.log(err));
 		}
-	}, [numericTracksFeatures]);
+	}, [userTopTracks]);
 
 	useEffect(() => {
 		if (tracksAudioFeatures) {
 			setMeanTracksFeatures({
-				acousticness: getAverageValue('acousticness'),
-				danceability: getAverageValue('danceability'),
-				duration_ms: getAverageValue('duration_ms'),
-				energy: getAverageValue('energy'),
-				instrumentalness: getAverageValue('instrumentalness'),
+				acousticness: getAveragePercentage('acousticness'),
+				danceability: getAveragePercentage('danceability'),
+				duration_ms: getAverageValue('duration_ms') / 60000, //CONVERTS ms TO min
+				energy: getAveragePercentage('energy'),
 				key: getMostCommonValue('key'),
-				liveness: getAverageValue('liveness'),
+				liveness: getAveragePercentage('liveness'),
 				loudness: getAverageValue('loudness'),
 				mode: getMostCommonValue('mode'),
 				tempo: getAverageValue('tempo'),
 				time_signature: getMostCommonValue('time_signature'),
-				valence: getAverageValue('valence'),
+				valence: getAveragePercentage('valence'),
 			});
 		}
 	}, [tracksAudioFeatures]);
 
+	function getAveragePercentage(feature: keyof ITracksFeatures) {
+		return (
+			(numericTracksFeatures
+				?.map((track) => track[feature])
+				.reduce((a, b) => a + b) /
+				50) *
+			100
+		);
+	}
+
+	function getAverageValue(feature: keyof ITracksFeatures) {
+		return (
+			numericTracksFeatures
+				?.map((track) => track[feature])
+				.reduce((a, b) => a + b) / 50
+		);
+	}
+
+	function getMostCommonValue(feature: keyof ITracksFeatures) {
+		return numericTracksFeatures
+			?.map((track) => track[feature])
+			.reduce((a, b) => (a > b ? a : b));
+	}
+
+	function getVerdict(value: number, category: string, opposite: string) {
+		if (value <= 25) {
+			return `That means you probably don't like ${category} songs and prefer ${opposite} songs`;
+		} else if (value > 25 && value <= 50) {
+			return `That means you probably like a few ${category} songs, but would rather listen to ${opposite} songs`;
+		} else if (value > 50 && value <= 75) {
+			return `That probably means some of your favourite songs are ${category}, but yout also enjoy ${opposite} songs`;
+		} else {
+			return `That probably means ${category} songs are your favourite kind of songs`;
+		}
+	}
+
+	function getKey(key: number) {
+		switch (key) {
+			case 0:
+				return 'C';
+			case 1:
+				return 'C#';
+			case 2:
+				return 'D';
+			case 3:
+				return 'D#';
+			case 4:
+				return 'E';
+			case 5:
+				return 'F';
+			case 6:
+				return 'F#';
+			case 7:
+				return 'G';
+			case 8:
+				return 'G#';
+			case 9:
+				return 'A';
+			case 10:
+				return 'A#';
+			case 11:
+				return 'B';
+			default:
+				return 'unknown';
+		}
+	}
+
+	function getTempo(tempo: number) {
+		if (tempo < 40) {
+			return 'That can be considered a very slow tempo';
+		} else if (tempo < 80) {
+			return 'That can be considered a slow tempo';
+		} else if (tempo < 110) {
+			return 'That can be considered a moderate tempo';
+		} else if (tempo < 130) {
+			return 'That can be considered a fast tempo';
+		} else {
+			return 'That can be considered a very fast tempo';
+		}
+	}
+
 	return (
-		<div style={{ backgroundColor: 'rgb(25,20,20)' }} className='w-100 d-flex flex-column align-items-center'>
+		<div
+			style={{ backgroundColor: 'rgb(25,20,20)' }}
+			className='w-100 d-flex flex-column align-items-center'>
 			<h1 className='mt-5 text-center'>
 				Based on yout top tracks, these are your musical preferences
 			</h1>
-            <h4 className='mt-4'>Your <span className='text-success'>acousticness</span> index is {meanTracksFeatures.acousticness.toFixed(0)}%</h4>
-            <h4>{getAverageVerdict(meanTracksFeatures.acousticness, 'acoustic')}</h4>
 
-            <h4 className='mt-4'>Your <span className='text-success'>danceability</span> index is {meanTracksFeatures.danceability.toFixed(0)}%</h4>
-            <h4>{getAverageVerdict(meanTracksFeatures.danceability, 'danceable')}</h4>
+			<h3 className='m-1 mt-5 text-center text-center'>
+				Your <span className='text-success'>acousticness</span> index is{' '}
+				{meanTracksFeatures.acousticness.toFixed(0)}%
+			</h3>
+			<h4 className='m-1 text-center'>
+				{getVerdict(
+					meanTracksFeatures.acousticness,
+					'acoustic',
+					'non-acoustic'
+				)}
+			</h4>
 
-            <h4 className='mt-4'>Your <span className='text-success'>energy</span> index is {meanTracksFeatures.energy.toFixed(0)}%</h4>
-            <h3>{getAverageVerdict(meanTracksFeatures.energy, 'energetic')}</h3>
+			<h3 className='m-1 mt-5 text-center'>
+				Your <span className='text-success'>danceability</span> index is{' '}
+				{meanTracksFeatures.danceability.toFixed(0)}%
+			</h3>
+			<h4 className='m-1 text-center'>
+				{getVerdict(
+					meanTracksFeatures.danceability,
+					'danceable',
+					'non-danceable'
+				)}
+			</h4>
+
+			<h3 className='m-1 mt-5 text-center'>
+				Your <span className='text-success'>energy</span> index is{' '}
+				{meanTracksFeatures.energy.toFixed(0)}%
+			</h3>
+			<h4 className='m-1 text-center'>
+				{getVerdict(meanTracksFeatures.energy, 'energetic', 'calmer')}
+			</h4>
+
+			<h3 className='m-1 mt-5 text-center'>
+				Your <span className='text-success'>liveness</span> index is{' '}
+				{meanTracksFeatures.liveness.toFixed(0)}%
+			</h3>
+			<h4 className='m-1 text-center'>{getVerdict(meanTracksFeatures.liveness, 'live', 'studio')}</h4>
+
+			<h3 className='m-1 mt-5 text-center'>
+				Your <span className='text-success'>valence</span> index is{' '}
+				{meanTracksFeatures.valence.toFixed(0)}%
+			</h3>
+			<h4 className='m-1 text-center'>{getVerdict(meanTracksFeatures.valence, 'happy', 'sad')}</h4>
+
+			<h3 className='m-1 mt-5 text-center'>
+				The average <span className='text-success'>tempo</span> of your
+				tracks is {meanTracksFeatures.tempo.toFixed(0)} bpm
+			</h3>
+			<h4 className='m-1 text-center'>{getTempo(meanTracksFeatures.tempo)}</h4>
+            
+			<h3 className='m-1 mt-5 text-center'>
+				The average <span className='text-success'>duration</span> of
+				your tracks is {Math.floor(meanTracksFeatures.duration_ms)}:
+				{((meanTracksFeatures.duration_ms % 1) * 60).toFixed(0)}
+			</h3>
+
+			<h3 className='m-1 mt-5 text-center'>
+				The most common <span className='text-success'>key</span> in
+				your tracks is {getKey(meanTracksFeatures.key)}
+			</h3>
 
 
+			<h3 className='m-1 mt-5 text-center'>
+				The most common{' '}
+				<span className='text-success'>time signature</span> in your
+				tracks is {meanTracksFeatures.time_signature}/4
+			</h3>
 
-
-			<ul className='list-group list-group-flush d-flex flex-column justify-content-center align-items-center'>
-
-				<li className='list-group-item'>
-					duration_ms:{meanTracksFeatures.duration_ms}
-				</li>
-				<li className='list-group-item'>
-					energy:{meanTracksFeatures.energy}
-				</li>
-				<li className='list-group-item'>
-					instrumentalness:
-					{meanTracksFeatures.instrumentalness}
-				</li>
-				<li className='list-group-item'>
-					key:{meanTracksFeatures.key}
-				</li>
-				<li className='list-group-item'>
-					liveness:{meanTracksFeatures.liveness}
-				</li>
-				<li className='list-group-item'>
-					loudness:{meanTracksFeatures.loudness}
-				</li>
-				<li className='list-group-item'>
-					mode:{meanTracksFeatures.mode}
-				</li>
-				<li className='list-group-item'>
-					tempo:{meanTracksFeatures.tempo}
-				</li>
-				<li className='list-group-item'>
-					time_signature:{meanTracksFeatures.time_signature}
-				</li>
-				<li className='list-group-item'>
-					valence:{meanTracksFeatures.valence}
-				</li>
-			</ul>
+			<h3 className='m-1 mt-5 text-center'>
+				The most common <span className='text-success'>mode</span> in
+				your tracks is{' '}
+				{meanTracksFeatures.mode === 1 ? 'major' : 'minor'}
+			</h3>
 		</div>
 	);
 }

@@ -19,7 +19,6 @@ export default function TopTracks() {
         })
         .then((res) => {
             setUserTopTracks(res.body.items);
-            console.log(res.body.items);
         })
         .catch((err) => console.log(err));
     }, [token])
