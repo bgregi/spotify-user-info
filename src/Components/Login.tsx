@@ -5,13 +5,7 @@ export default function Login() {
 	const RESPONSE_TYPE = 'code';
 	const REDIRECT_URI = 'http://localhost:3000';
 	const scopeList = [
-		'streaming',
-		'user-read-email',
 		'user-read-private',
-		'user-library-read',
-		'user-library-modify',
-		'user-read-playback-state',
-		'user-modify-playback-state',
         'user-top-read'
 	];
 
