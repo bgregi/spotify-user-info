@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { accessToken, topTracks } from '../state/atom';
 import SpotifyWebApi from 'spotify-web-api-node';
+import dayjs from 'dayjs'
 
 interface ITracksFeatures {
 	acousticness: number;
@@ -86,7 +87,7 @@ export default function Preferences() {
 			setMeanTracksFeatures({
 				acousticness: getAveragePercentage('acousticness'),
 				danceability: getAveragePercentage('danceability'),
-				duration_ms: getAverageValue('duration_ms') / 60000, //CONVERTS ms TO min
+				duration_ms: getAverageValue('duration_ms'),
 				energy: getAveragePercentage('energy'),
 				key: getMostCommonValue('key'),
 				liveness: getAveragePercentage('liveness'),
@@ -240,8 +241,7 @@ export default function Preferences() {
             
 			<h3 className='m-1 mt-5 text-center'>
 				The average <span className='text-success'>duration</span> of
-				your tracks is {Math.floor(meanTracksFeatures.duration_ms)}:
-				{((meanTracksFeatures.duration_ms % 1) * 60).toFixed(0)}
+				your tracks is {dayjs(meanTracksFeatures.duration_ms).format('mm:ss')}
 			</h3>
 
 			<h3 className='m-1 mt-5 text-center'>
