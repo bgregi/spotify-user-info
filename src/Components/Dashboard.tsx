@@ -30,6 +30,7 @@ export default function Dashboard() {
 			.getMe()
 			.then((res) => {
 				setUserInfo(res.body);
+				console.log(res.body.images);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -45,17 +46,22 @@ export default function Dashboard() {
 						backgroundImage:
 							'linear-gradient(0deg, rgba(25,20,20,1) 5%, rgba(25,20,20,1) 26%, rgba(26,65,38,1) 63%, rgba(28,122,60,1) 82%, rgba(30,215,96,1) 100%)',
 					}}>
-					<img
-						className='mt-5'
-						style={{
-							height: '150px',
-							width: '150px',
-							borderRadius: '50%',
-							objectFit: 'cover',
-						}}
-						src={userInfo?.images?.[0].url}
-						alt='user'
-					/>
+					{userInfo?.images?.[0] ? (
+						<img
+							className='mt-5'
+							style={{
+								height: '150px',
+								width: '150px',
+								borderRadius: '50%',
+								objectFit: 'cover',
+							}}
+							src={userInfo?.images?.[0].url}
+							alt='user'
+						/>
+					) : (
+						<></>
+					)}
+
 					<h1 className='text-center mt-5'>
 						Hi, {userInfo?.display_name?.split(' ')[0]}!
 					</h1>

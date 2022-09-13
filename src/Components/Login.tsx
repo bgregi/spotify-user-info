@@ -3,7 +3,7 @@ import Container from 'react-bootstrap/Container';
 export default function Login() {
 	const CLIENT_ID = 'f01f87154b634e5cbd387f70e116d207';
 	const RESPONSE_TYPE = 'code';
-	const REDIRECT_URI = 'https://bgregi.github.io/spotify-whats-my-taste/';
+	const REDIRECT_URI = 'https://bgregi.github.io/spotify-whats-my-taste';
 	const scopeList = [
 		'user-read-private',
         'user-top-read'

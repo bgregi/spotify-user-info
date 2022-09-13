@@ -129,7 +129,7 @@ export default function Preferences() {
 		} else if (value > 25 && value <= 50) {
 			return `That means you probably like a few ${category} songs, but would rather listen to ${opposite} songs`;
 		} else if (value > 50 && value <= 75) {
-			return `That probably means some of your favourite songs are ${category}, but yout also enjoy ${opposite} songs`;
+			return `That probably means some of your favourite songs are ${category}, but you also enjoy ${opposite} songs`;
 		} else {
 			return `That probably means ${category} songs are your favourite kind of songs`;
 		}
@@ -185,7 +185,7 @@ export default function Preferences() {
 			style={{ backgroundColor: 'rgb(25,20,20)' }}
 			className='w-100 d-flex flex-column align-items-center'>
 			<h1 className='mt-5 text-center'>
-				Based on yout top tracks, these are your musical preferences
+				Based on your top tracks, these are your musical preferences
 			</h1>
 
 			<h3 className='m-1 mt-5 text-center text-center'>
