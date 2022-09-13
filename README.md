@@ -1,10 +1,9 @@
-# What's My Taste? 
-## A Spotify API Web App
+# What's My Taste? - A Spotify API Web App
 
-This web app shows the user their Spotify top artists and tracks, as well as some of their musical preferences, based on said top tracks. It's a great tool to now more about your own musical tastes and how they develop over time, or to compare your preferences with those of your friends.
+This web app shows the user their Spotify top artists and tracks, as well as some of their musical preferences, based on said top tracks. It's a great tool to know more about your own musical tastes and how they develop over time, or to compare your preferences with those of your friends.
 
 ## Important Note
-This app is finished, but currently can't be accessed by anyone who's not registered. This is because I'm still waiting for Spotify's approval to make it go public. If you're interested in using it, e-mail me and I'll register your Spotify account with it.
+This app is finished, but currently can't be accessed by anyone who's not registered. This is because I'm still waiting for Spotify's approval to make it go public. If you're interested in using it, e-mail me at bgeraldir@gmail.com and I'll register your Spotify account with it.
 
 ## Built With
 - React (create-react-app)
@@ -30,3 +29,9 @@ The server's response is the access token, which is stored in another Recoil sta
 
 ## Thanks
 The authorization procedure, along with the server coding, was borrowed from the youtuber Web Dev Simplified, who made a great video about it. Check it out [here](https://www.youtube.com/watch?v=Xcet6msf3eE).
+
+## Screenshots
+
+![Login page](./src/assets/login.png)
+
+![Dashboard](./src/assets/dashboard.png)
