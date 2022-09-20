@@ -2,9 +2,6 @@
 
 [This web app](https://bgregi.github.io/spotify-whats-my-taste/) shows the user their Spotify top artists and tracks, as well as some of their musical preferences, based on said top tracks. It's a great tool to know more about your own musical tastes and how they develop over time, or to compare your preferences with those of your friends.
 
-## Important Note
-This app is finished, but currently can't be accessed by anyone who's not registered. This is because I'm still waiting for Spotify's approval to make it go public. If you're interested in using it, e-mail me at bgeraldir@gmail.com and I'll register your Spotify account with it.
-
 ## Built With
 - React (create-react-app)
 - Typescript
